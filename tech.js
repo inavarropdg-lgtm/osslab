@@ -1,0 +1,104 @@
+/* ================= v12 · Técnica: catálogo =================
+Modelo:
+  id     slug único y estable (se usará en la capa social: /tecnica/<id>)
+  cat    drill | escape | guardia | pase | derribo | sumision | mente
+  k      3 puntos clave · e  errores típicos
+  sit    situaciones del paso 3 (SIT) · fav juegos (FAV) · topic temas de clase (CLASST) · drill id de DRILLS
+  video  { type:'youtube'|'native'|'pending', url?, startSeconds?, ch? }
+Para pasar a vídeo propio: video:{type:'native',url:'video/<id>.mp4'} */
+const TCAT={drill:{es:'Drills',en:'Drills'},escape:{es:'Escapes',en:'Escapes'},guardia:{es:'Guardias',en:'Guards'},pase:{es:'Pases',en:'Passes'},derribo:{es:'Derribos',en:'Takedowns'},sumision:{es:'Sumisiones',en:'Submissions'},mente:{es:'Mente',en:'Mind'}};
+const yt=(id,ch,s)=>({type:'youtube',url:'https://www.youtube.com/watch?v='+id,startSeconds:s||0,ch});
+const PENDING={type:'pending'};
+const TECH=[
+/* ---- drills en solitario ---- */
+{id:'gamba',cat:'drill',drill:'gamba',sit:['montada','lateral','retener'],fav:['cerrada','media'],topic:['retener','guardia','montada'],n:{es:'Gamba (escape de cadera)',en:'Shrimp (hip escape)'},
+k:{es:['Apoya el pie de abajo y empuja el suelo, no al rival','La cadera sale hacia atrás; los hombros casi no se mueven','Termina de lado con la rodilla dentro, lista para recuperar guardia'],en:['Plant the bottom foot and push the floor, not your partner','Hips go back; shoulders barely move','Finish on your side with the knee inside, ready to recover guard']},
+e:{es:['Quedarte plano boca arriba al terminar','Empujar con los brazos estirados y regalar el codo'],en:['Ending flat on your back','Pushing with straight arms and giving up the elbow']},video:yt('4fyMiLey6rI','Henry Akins · BJJ Fanatics')},
+{id:'upa',cat:'escape',drill:'upa',sit:['montada'],fav:[],topic:['montada'],n:{es:'Upa: puente y giro desde la montada',en:'Upa: bridge and roll from mount'},
+k:{es:['Atrapa brazo y pierna del mismo lado antes de puentear','Puente en diagonal, por encima de tu hombro, no hacia arriba','Termina dentro de su guardia con la postura alta'],en:['Trap the arm and leg on the same side before bridging','Bridge diagonally over your shoulder, not straight up','Land inside their guard with good posture']},
+e:{es:['Puentear sin atrapar: el rival pone la mano y se queda','Bajar la cadera a medio giro'],en:['Bridging without the trap: they post and stay','Dropping the hips halfway through the roll']},video:yt('whaSmJBrKZY','Stephan Kesting · Grapplearts')},
+{id:'levantada-tecnica',cat:'drill',drill:'levantada',sit:['derribo','ritmo','retener'],fav:['derribo'],topic:['derribos','retener'],n:{es:'Levantada técnica',en:'Technical stand-up'},
+k:{es:['Mano de apoyo detrás y pie contrario plantado','Levanta la cadera y pasa la pierna por debajo, no por delante','Acaba de pie en guardia, a distancia y con las manos arriba'],en:['Post hand behind, opposite foot planted','Lift the hips and swing the leg underneath, not in front','Finish standing in stance, at distance, hands up']},
+e:{es:['Levantarte de frente con las dos manos en el suelo','Bajar la mano libre y dejar la cabeza expuesta'],en:['Standing up square with both hands on the mat','Dropping the free hand and exposing the head']},video:yt('quMmk9Xs2HE','Stephan Kesting · Grapplearts')},
+{id:'granby',cat:'drill',drill:'granby',sit:['invertir','retener'],fav:['abierta'],topic:['retener','guardia'],n:{es:'Granby (inversión de hombros)',en:'Granby roll'},
+k:{es:['Rueda sobre el hombro, nunca sobre la cabeza o el cuello','Rodillas al pecho para hacer la bola pequeña','Termina de frente, con pies o rodillas entre tú y el rival'],en:['Roll over the shoulder, never over the head or neck','Knees to chest to make the ball small','Finish facing them with feet or knees in between']},
+e:{es:['Cargar el peso en el cuello','Abrir las piernas a mitad de giro'],en:['Loading weight onto the neck','Opening the legs mid-roll']},video:yt('UACvuXvzXb4','Matt Edgington · Jiu Jitsu Ronin')},
+{id:'sit-out',cat:'drill',drill:'hipswitch',sit:['lateral','derribo'],fav:['mariposa','media'],topic:['guardia','derribos'],n:{es:'Sit-out y hip switch',en:'Sit-out and hip switch'},
+k:{es:['A cuatro patas con las rodillas despegadas','Pasa la pierna por debajo y gira la cadera hacia el suelo','Vuelve rápido a la base: el sit-out es una transición, no un destino'],en:['On all fours with knees off the floor','Thread the leg through and turn the hips to the mat','Return to base fast: the sit-out is a transition, not a destination']},
+e:{es:['Sentarte del todo y quedarte de espaldas','Girar la cabeza al lado contrario de la cadera'],en:['Sitting all the way and giving your back','Turning the head opposite to the hips']},video:yt('y8-pImQ2_-w','BJJ Solo Drills')},
+{id:'sprawl',cat:'derribo',drill:'sprawl',sit:['derribo','ritmo'],fav:['derribo'],topic:['derribos'],n:{es:'Sprawl',en:'Sprawl'},
+k:{es:['Las caderas caen al suelo, las piernas atrás y abiertas','Pecho pesado sobre su espalda, cabeza arriba','Circula a un lado en cuanto pare el empuje'],en:['Hips drop to the mat, legs back and wide','Heavy chest on their back, head up','Circle to the side as soon as the drive stops']},
+e:{es:['Quedarte de rodillas en vez de sacar las piernas','Mirar al suelo y dejar que te levanten'],en:['Staying on your knees instead of kicking the legs back','Looking down and letting them lift you']},video:yt('J0kcsLXX1Ms','Ben Askren · Fanatic Wrestling')},
+{id:'doble-pierna',cat:'derribo',drill:'penetracion',sit:['derribo'],fav:['derribo'],topic:['derribos'],n:{es:'Doble pierna (paso de penetración)',en:'Double leg (penetration step)'},
+k:{es:['Baja el nivel con las piernas, no doblando la espalda','Paso largo entre sus pies y rodilla al suelo','Cabeza pegada a su costado y termina corriendo en diagonal'],en:['Change level with your legs, not by bending the back','Long step between their feet, knee to the mat','Head tight to their side and finish driving at an angle']},
+e:{es:['Disparar desde demasiado lejos','Cabeza baja delante del rival: guillotina'],en:['Shooting from too far away','Head low in front of them: guillotine']},video:yt('aan6eCxx8lc','Double Leg Takedown')},
+/* ---- escapes ---- */
+{id:'escape-montada-codo-rodilla',cat:'escape',sit:['montada'],fav:['media'],topic:['montada'],n:{es:'Escape codo-rodilla de la montada',en:'Elbow-knee mount escape'},
+k:{es:['Codo dentro de su rodilla: es una cuña, no un empujón','Gamba hacia el codo para hacer sitio a tu rodilla','Mete la rodilla, recupera media guardia y luego guardia completa'],en:['Elbow inside their knee: it is a wedge, not a push','Shrimp towards the elbow to make room for your knee','Insert the knee, recover half guard, then full guard']},
+e:{es:['Empujar su pecho con los brazos estirados','Gamba sin haber puesto antes el codo'],en:['Pushing their chest with straight arms','Shrimping before the elbow is in place']},video:yt('SLecLzOCVNc','Grappling Fundamentals')},
+{id:'escape-lateral',cat:'escape',drill:'gamba',sit:['lateral'],fav:[],topic:['montada','guardia'],n:{es:'Escape del control lateral',en:'Side control escape'},
+k:{es:['Marcos: antebrazo en su cuello y mano en su cadera','Respira, mueve la cadera hacia fuera, no el rival','Mete la rodilla en el hueco y recupera guardia'],en:['Frames: forearm on the neck, hand on the hip','Breathe, move your hips away, not them','Insert the knee into the gap and recover guard']},
+e:{es:['Abrazarle o dejar los brazos a sus lados','Intentar puentear con el rival pegado al pecho'],en:['Hugging or leaving your arms by your sides','Bridging while they are glued to your chest']},video:yt('sL_NqnM-LQI','Journey BJJ Academy')},
+{id:'retencion-guardia',cat:'escape',drill:'gamba',sit:['retener'],fav:['abierta','mariposa'],topic:['retener','guardia'],n:{es:'Retención de guardia: marcos y gamba',en:'Guard retention: frames and shrimp'},
+k:{es:['Siempre un pie o rodilla entre tú y su cadera','Marco en su bíceps u hombro antes de que se acerque','Gamba para reencuadrar cuando sus piernas te rodeen'],en:['Always a foot or knee between you and their hips','Frame on the biceps or shoulder before they close distance','Shrimp to re-square when they get around your legs']},
+e:{es:['Quedarte plano con las piernas juntas','Agarrar la manga y dejar de mover la cadera'],en:['Lying flat with legs together','Holding sleeves and forgetting to move the hips']},video:yt('guvkB6NvL_U','Foundations of Guard Retention')},
+{id:'escape-espalda',cat:'escape',sit:['montada','lateral'],fav:[],topic:['espalda'],n:{es:'Escape de la espalda',en:'Back escape'},
+k:{es:['Primero las manos: protege el cuello y lucha el brazo del estrangulamiento','Baja la cabeza y los hombros hacia el lado del brazo de abajo','Hombros al suelo y gira hacia él para acabar arriba o en guardia'],en:['Hands first: protect the neck and fight the choking arm','Slide head and shoulders towards the bottom-arm side','Shoulders to the mat, then turn in to end on top or in guard']},
+e:{es:['Escapar sin defender el cuello antes','Girar hacia el lado del brazo que estrangula'],en:['Escaping before defending the neck','Turning towards the choking-arm side']},video:yt('x91GF7MY5F4','Stephan Kesting · Grapplearts')},
+/* ---- guardias ---- */
+{id:'tijera-guardia-cerrada',cat:'guardia',sit:['finalizar'],fav:['cerrada'],topic:['guardia'],n:{es:'Raspado de tijera (guardia cerrada)',en:'Scissor sweep (closed guard)'},
+k:{es:['Agarre de solapa y manga del mismo lado','Ángulo: sal con la cadera y espinilla en su abdomen','Corta con la pierna de abajo mientras tiras de la manga'],en:['Collar and same-side sleeve grip','Angle: hip out and shin across the belly','Chop with the bottom leg as you pull the sleeve']},
+e:{es:['Hacerlo de frente, sin ángulo','Soltar la manga y dejar que ponga la mano'],en:['Doing it square, with no angle','Letting go of the sleeve so they can post']},video:yt('nxdE2JUOlSY','Closed Guard Fundamentals')},
+{id:'media-guardia-escudo',cat:'guardia',drill:'gamba',sit:['montada','lateral','retener'],fav:['media'],topic:['guardia'],n:{es:'Media guardia con escudo de rodilla',en:'Knee-shield half guard'},
+k:{es:['Rodilla cruzada en su pecho: marca la distancia','De lado, nunca plano; mano en su cuello o bíceps','Si te aplasta, gamba y recoloca el escudo'],en:['Knee across their chest sets the distance','On your side, never flat; hand on the neck or biceps','If they flatten you, shrimp and reset the shield']},
+e:{es:['Dejar la rodilla en su cadera en vez de en su pecho','Quedarte plano con la cabeza en el suelo'],en:['Shield on their hip instead of their chest','Lying flat with your head on the mat']},video:yt('q_ND-09HiWg','Gustavo Gasperin')},
+{id:'mariposa-raspado',cat:'guardia',drill:'hipswitch',sit:['retener','pasar'],fav:['mariposa'],topic:['guardia'],n:{es:'Raspado básico de mariposa',en:'Basic butterfly sweep'},
+k:{es:['Sentado y con la cabeza por encima de la suya','Gancho dentro de su muslo y bloqueo del brazo del lado del raspado','Cae de lado y eleva el gancho para lanzarle por encima'],en:['Sit up with your head higher than theirs','Hook inside the thigh and block the arm on the sweep side','Fall to your side and lift the hook to send them over']},
+e:{es:['Caer de espaldas en vez de de lado','Tirar con los brazos sin elevar con el gancho'],en:['Falling flat on your back instead of to the side','Pulling with the arms without lifting the hook']},video:yt('cXvIyuSMqLM','Butterfly Guard Fundamentals')},
+/* ---- pases ---- */
+{id:'pase-toreando',cat:'pase',drill:'toreando',sit:['pasar'],fav:['toreando'],topic:['pases'],n:{es:'Pase toreando',en:'Toreando pass'},
+k:{es:['Controla las rodillas o el pantalón, no los tobillos','Empuja las piernas a un lado y corre al otro','Rodilla a su cadera o al estómago antes de que reencuadre'],en:['Control the knees or pants, not the ankles','Push the legs one way and run the other','Knee to the hip or belly before they re-square']},
+e:{es:['Quedarte delante de sus pies','Soltar las piernas antes de fijar el control'],en:['Staying in front of their feet','Letting go of the legs before you pin']},video:yt('Bcdc55dVCw0','Kyle Sleeman · BJJ Fanatics')},
+{id:'pase-rodilla-cortada',cat:'pase',sit:['pasar'],fav:['presionp'],topic:['pases'],n:{es:'Pase de rodilla cortada (knee cut)',en:'Knee cut pass'},
+k:{es:['Cabeza por delante de su cabeza: el hombro manda','Rodilla en diagonal sobre su muslo, pegada al suelo','Controla el brazo de abajo (underhook) antes de sacar el pie'],en:['Head ahead of their head: the shoulder leads','Knee slices diagonally over the thigh, glued to the mat','Control the bottom arm (underhook) before freeing the foot']},
+e:{es:['Dejarle el underhook: te toma la espalda','Cortar con la cadera alta y sin peso'],en:['Giving them the underhook: they take your back','Slicing with high hips and no weight']},video:yt('O3qz2eeQm8c','Foundations of Guard Passing')},
+/* ---- sumisiones ---- */
+{id:'llave-brazo-guardia',cat:'sumision',sit:['finalizar'],fav:['cerrada'],topic:['guardia'],n:{es:'Llave de brazo desde la guardia cerrada',en:'Armbar from closed guard'},
+k:{es:['Controla el brazo pegado a tu pecho antes de moverte','Ángulo: pie en su cadera y gira la cadera hacia fuera','Rodillas juntas, pulgar arriba y eleva la cadera despacio'],en:['Pin the arm to your chest before you move','Angle: foot on the hip and swing the hips out','Knees together, thumb up and lift the hips slowly']},
+e:{es:['Atacar de frente sin ángulo','Abrir las rodillas: el brazo se escapa'],en:['Attacking square with no angle','Opening the knees: the arm slips out']},video:yt('hZAn64WGMo0','Alex Smith · BJJ Fanatics')},
+{id:'triangulo',cat:'sumision',sit:['finalizar'],fav:['cerrada','abierta'],topic:['guardia'],n:{es:'Triángulo desde la guardia',en:'Triangle from guard'},
+k:{es:['Un brazo dentro y otro fuera','Corvas sobre el cuello y tira de la cabeza hacia abajo','Ángulo antes de apretar: gira para quedar de lado'],en:['One arm in, one arm out','Back of the knee over the neck and pull the head down','Angle before squeezing: turn to the side']},
+e:{es:['Cerrar recto sin ángulo','Dejarle levantar la postura'],en:['Locking it square with no angle','Letting them posture up']},video:yt('SkVlnZNq73o','Fundamentals of Submissions')},
+{id:'kimura-guardia',cat:'sumision',sit:['finalizar'],fav:['cerrada','media'],topic:['guardia'],n:{es:'Kimura desde la guardia',en:'Kimura from guard'},
+k:{es:['Agarra la muñeca cuando apoye la mano en el suelo','Siéntate, pasa el brazo por encima de su hombro y cierra la figura cuatro','Codo pegado a ti y gira hacia su cabeza'],en:['Grab the wrist when they post on the mat','Sit up, reach over the shoulder and lock the figure-four','Keep the elbow tight to you and rotate towards their head']},
+e:{es:['Atacar desde plano, sin sentarte','Dejar que el codo se separe de tu cuerpo'],en:['Attacking flat without sitting up','Letting their elbow drift away from you']},video:yt('ZLsg4M0lHzA','BJJ Beginners Tutorial')},
+{id:'mata-leon',cat:'sumision',sit:['finalizar'],fav:['espalda'],topic:['espalda'],n:{es:'Mata león',en:'Rear naked choke'},
+k:{es:['Codo bajo su barbilla: el brazo de estrangular entra primero','Mano a tu bíceps y la otra detrás de su cabeza','Pecho pegado a su espalda y cierra los codos'],en:['Elbow under the chin: the choking arm goes in first','Hand to your biceps, the other behind their head','Chest to their back and pinch the elbows']},
+e:{es:['Apretar sobre la mandíbula en vez del cuello','Soltar los ganchos para estrangular'],en:['Squeezing the jaw instead of the neck','Releasing the hooks to finish the choke']},video:yt('AkCyguF6HPo','Fundamentals of Submissions')},
+{id:'recto-tobillo',cat:'sumision',sit:['finalizar'],fav:['leglock'],topic:['piernas'],n:{es:'Llave recta de tobillo',en:'Straight ankle lock'},
+k:{es:['Su pie en tu axila y el antebrazo bajo el tendón de Aquiles','Rodillas apretadas en su pierna','Arquea la espalda despacio: suelta en cuanto palmee'],en:['Foot in your armpit, forearm under the Achilles','Knees squeezing their leg','Arch the back slowly: release as soon as they tap']},
+e:{es:['Agarrar el talón en vez del tendón','Finalizar con un tirón brusco'],en:['Grabbing the heel instead of the tendon','Finishing with a sudden jerk']},video:yt('sbk7qaKb7nY','Fundamentals of Submissions')},
+/* ---- mente ---- */
+{id:'respiracion-cuadrada',cat:'mente',drill:'breath',sit:['ritmo','marcador'],fav:[],topic:['sparring'],n:{es:'Respiración cuadrada 4-4-4-4',en:'Box breathing 4-4-4-4'},
+k:{es:['Inspira 4 s por la nariz, mantén 4 s','Espira 4 s, mantén 4 s','3–5 ciclos antes de salir a combatir o entre rondas'],en:['Inhale 4 s through the nose, hold 4 s','Exhale 4 s, hold 4 s','3–5 cycles before a match or between rounds']},
+e:{es:['Hacerlo con prisa y llenar el pecho','Probarlo por primera vez el día de la competición'],en:['Rushing and breathing into the chest','Trying it for the first time on competition day']},video:yt('3lKf6NJxvYw','Box Breathing · 5 min')},
+/* ---- pendientes: vídeo propio en grabación ---- */
+{id:'sombra',cat:'drill',drill:'shadowg',sit:['ritmo'],fav:[],topic:['sparring'],n:{es:'Grappling en sombra',en:'Shadow grappling'},
+k:{es:['Encadena 4–5 movimientos de tu juego sin parar','Ritmo de combate: 2–3 min seguidos','Imagina las reacciones del rival y cambia de lado'],en:['Chain 4–5 moves from your game without stopping','Match pace: 2–3 minutes straight','Picture their reactions and switch sides']},
+e:{es:['Hacer movimientos sueltos sin conectar','Ir tan rápido que pierdes la técnica'],en:['Doing isolated moves without linking them','Going so fast the technique falls apart']},video:PENDING},
+{id:'agarres-toalla',cat:'drill',drill:'toalla',sit:['derribo','finalizar'],fav:['cerrada','abierta'],topic:['guardia','derribos'],n:{es:'Agarres con toalla',en:'Towel grip training'},
+k:{es:['Agarre de kimono: pulgar fuera, cierra el puño','Colgado o tirones de 20–30 s','Alterna manos y descansa los dedos entre series'],en:['Gi grip: thumb outside, close the fist','Hangs or pulls of 20–30 s','Alternate hands and rest the fingers between sets']},
+e:{es:['Entrenar agarre con los dedos ya doloridos','Apretar sin respirar'],en:['Training grip with already sore fingers','Squeezing while holding your breath']},video:PENDING},
+{id:'pase-presion',cat:'pase',sit:['pasar'],fav:['presionp'],topic:['pases'],n:{es:'Pase de presión (over-under)',en:'Pressure pass (over-under)'},
+k:{es:['Un brazo por debajo de una pierna y otro por encima de la otra','Hombro en su muslo y cadera baja','Camina hacia el lado de la pierna de abajo'],en:['One arm under a leg, the other over the other leg','Shoulder on the thigh, hips low','Walk towards the under-leg side']},
+e:{es:['Dejar la cadera alta y sin peso','Dejar espacio entre tu pecho y sus piernas'],en:['High hips with no weight','Leaving space between your chest and their legs']},video:PENDING},
+{id:'toma-espalda',cat:'guardia',sit:['finalizar'],fav:['espalda'],topic:['espalda'],n:{es:'Toma de espalda con cinturón de seguridad',en:'Back take with seatbelt'},
+k:{es:['Cinturón de seguridad: un brazo por encima del hombro, otro por debajo','Pecho pegado y cabeza al lado del brazo de abajo','Ganchos después: primero el de arriba'],en:['Seatbelt: one arm over the shoulder, one under','Chest glued, head on the under-arm side','Hooks after: top hook first']},
+e:{es:['Poner los ganchos antes de controlar el torso','Cruzar los tobillos'],en:['Inserting hooks before controlling the torso','Crossing your ankles']},video:PENDING},
+{id:'visualizacion',cat:'mente',drill:'visual',sit:['marcador'],fav:[],topic:['sparring'],n:{es:'Visualización de tu plan A',en:'Plan A visualisation'},
+k:{es:['2 minutos con los ojos cerrados, antes de dormir','Recorre tu plan A de principio a fin, con detalles','Incluye un error y cómo lo corriges'],en:['2 minutes eyes closed, before sleep','Run your plan A start to finish, in detail','Include a mistake and how you fix it']},
+e:{es:['Imaginar solo el resultado, no las acciones','Hacerlo solo el día antes de competir'],en:['Picturing only the result, not the actions','Doing it only the day before competing']},video:PENDING},
+{id:'rutina-previa',cat:'mente',drill:'routine',sit:['marcador','ritmo'],fav:[],topic:['sparring'],n:{es:'Rutina previa al combate',en:'Pre-match routine'},
+k:{es:['Siempre la misma: movilidad, 3 ciclos de respiración, palabra clave','Empieza 10 minutos antes de salir','Ensáyala en los sparrings duros'],en:['Always the same: mobility, 3 breathing cycles, cue word','Start 10 minutes before you go out','Rehearse it in hard sparring']},
+e:{es:['Cambiarla cada vez','Usarla por primera vez en competición'],en:['Changing it every time','Using it for the first time at a competition']},video:PENDING}];
+const techById=id=>TECH.find(t=>t.id===id);

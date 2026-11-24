@@ -1,0 +1,11 @@
+{
+  "name": "osslab",
+  "version": "17.0.0",
+  "private": true,
+  "description": "osslab: plan de entrenamiento de BJJ (MVP en un solo HTML)",
+  "scripts": {
+    "build": "python3 build.py",
+    "test": "for t in tests/t*.js; do node $t || exit 1; done"
+  },
+  "devDependencies": { "jsdom": "^24.1.3" }
+}
